@@ -230,7 +230,7 @@ footer { padding-block: 32px 56px; margin-top: 48px; border-top: 1px solid var(-
       <dt>Autor</dt><dd>Bc. Juraj Hušek</dd>
       <dt>Vedúca</dt><dd>doc. Mgr. Mária Ždímalová, PhD.</dd>
       <dt>Obdobie</dt><dd>15. 9. 2026 – odovzdanie v máji 2027</dd>
-      <dt>Stav</dt><dd>priebežný; výsledky k 9. 11. 2026, vygenerované 9. 11. 2026</dd>
+      <dt>Stav</dt><dd>priebežný; výsledky k 9. 11. 2026, vygenerované 11. 11. 2026</dd>
       <dt>Dáta</dt><dd>PI-CAI public, T2W + ADC + HBV, cieľ csPCa (ISUP ≥ 2)</dd>
     </dl>
   </div>
@@ -279,7 +279,7 @@ footer { padding-block: 32px 56px; margin-top: 48px; border-top: 1px solid var(-
   </div>
   <div class="tbl-wrap"><table id="heat-table" class="heat"></table></div>
   <div class="heat-legend"><span>horšie</span><i style="background:#f4f6f8"></i><i style="background:#cde2fb"></i><i style="background:#9ec5f4"></i><i style="background:#6da7ec"></i><i style="background:#3987e5"></i><i style="background:#256abf"></i><i style="background:#184f95"></i><span>lepšie</span></div>
-  <p class="tbl-note">Farba ukazuje poradie modelu v danom stĺpci (najtmavšia a tučná = najlepší), nie veľkosť rozdielu; či je rozdiel preukázateľný, ukazujú karty vyššie a bootstrap v sekcii Výsledky. Pri HD95 a FP objeme je lepšia nižšia hodnota. Accuracy je vynechaná, lebo sa líši až na 4. desatinnom mieste.</p>
+  <p class="tbl-note">Farba ukazuje poradie modelu v danom stĺpci (najtmavšia a tučná = najlepší), nie veľkosť rozdielu; či je rozdiel preukázateľný, ukazujú karty vyššie a bootstrap v sekcii Výsledky. Pri HD95 a FP objeme je lepšia nižšia hodnota; pri HD95 je v zátvorke počet chorých, z ktorých sa počíta (YOLO iba z polovice). Accuracy je vynechaná, lebo sa líši až na 4. desatinnom mieste.</p>
   <div class="panel" style="margin-top:18px">
     <h3>Čo ktorý model robí dobre</h3>
     <ul class="tight small" id="model-strengths"></ul>
@@ -293,7 +293,7 @@ footer { padding-block: 32px 56px; margin-top: 48px; border-top: 1px solid var(-
     <p><b>AP 0,556</b> meria, či sú skutočné lézie medzi najistejšími nálezmi modelu. Keď lekár prechádza nálezy od najistejšieho, vysoké AP znamená, že na začiatku zoznamu sú hlavne skutočné lézie a falošné nálezy prídu až neskôr. Z AUROC a AP je <b>skóre PI-CAI 0,702</b> (ich priemer), podľa ktorého sa radia modely vo výzve PI-CAI.</p>
     <p><b>Zachytené pozitívne 89 %</b> znamená, že u 57 zo 64 chorých sa označená oblasť aspoň dotkne lézie. <b>Citlivosť lézií 0,85 pri 0,5 falošného nálezu na pacienta</b>: ak lekár toleruje jeden falošný nález na dvoch pacientov, model nájde 85 % lézií.</p>
     <p><b>Dice+ 0,472</b> a <b>IoU+ 0,342</b> hovoria, ako presne model obkreslí léziu u chorého. Dice 1 je dokonalá zhoda s maskou rádiológa, 0 žiadne prekrytie. Hodnota okolo 0,47 znamená, že obrys sa s odbornou maskou prekrýva približne do polovice. Časť lézie chýba (<b>citlivosť+ 0,54</b>: pokryje 54 % objemu lézie) a časť označeného objemu leží mimo nej (<b>precision+ 0,53</b>: 53 % označeného objemu je naozaj lézia).</p>
-    <p><b>HD95 6 mm</b> je vzdialenosť okrajov: 95 % bodov obrysu modelu leží do 6 mm od okraja odbornej masky, čo sú asi dva 3 mm rezy.</p>
+    <p><b>HD95 6 mm</b> je vzdialenosť okrajov: 95 % bodov obrysu modelu leží do 6 mm od okraja odbornej masky, čo sú asi dva 3 mm rezy. Počíta sa zo 61 zo 64 chorých; pri zvyšných 3 model neoznačil nič, takže okraj nemá s čím porovnať.</p>
     <p><b>Čisté negatívne 46 %</b> znamená, že pri 46 % zdravých pacientov model neoznačí ani jeden voxel. U zvyšných 54 % by lekár musel posúdiť aspoň jeden falošný nález. <b>FP 783 mm³</b> je priemerný falošne označený objem na zdravého pacienta, približne 0,8 cm³.</p>
     <p><b>Accuracy 0,9992</b> je pri všetkých modeloch takmer rovnaká, lebo lézia tvorí iba ~0,01 % voxelov. Aj model, ktorý by neoznačil nič, by mal accuracy okolo 0,999, preto sa podľa nej modely neporovnávajú.</p>
 
@@ -446,7 +446,7 @@ footer { padding-block: 32px 56px; margin-top: 48px; border-top: 1px solid var(-
         <li><b>Precision+</b> (presnosť pozitívnej predikcie) = TP / (TP + FP), priemer cez pozitívne s neprázdnou predikciou.</li>
         <li><b>Citlivosť+</b> (recall) = TP / (TP + FN), priemer cez pozitívne.</li>
         <li><b>Accuracy</b> (celková presnosť) = (TP + TN) / všetky voxely. Pri ~0,01 % voxelov lézie je vždy ~0,999.</li>
-        <li><b>HD95</b>: 95. percentil vzdialeností medzi povrchmi predikcie a masky (oba smery), v mm so spacingom 3 × 0,75 × 0,75. Medián cez pozitívne s neprázdnou predikciou. Menej je lepšie.</li>
+        <li><b>HD95</b>: 95. percentil vzdialeností medzi povrchmi predikcie a masky (oba smery), v mm so spacingom 3 × 0,75 × 0,75. Medián cez pozitívne s neprázdnou predikciou. Menej je lepšie. <b>V tabuľkách je pri HD95 v zátvorke počet vyšetrení, z ktorých sa počíta</b> (napr. 61/64): pri prázdnej predikcii sa vzdialenosť nedá určiť a vyšetrenie vypadne. Modely s rôznym počtom preto nie sú priamo porovnateľné, napr. YOLO pri p ≥ 0,5 má HD95 iba z 33 zo 64 chorých.</li>
       </ul>
     </div>
     <div class="panel">
@@ -478,7 +478,7 @@ footer { padding-block: 32px 56px; margin-top: 48px; border-top: 1px solid var(-
   <div class="sec-head">
     <div class="eyebrow">Výsledky · validácia, p ≥ 0,5, bez postprocessingu</div>
     <h2>Všetky metriky všetkých modelov</h2>
-    <p>Zvýraznená je najlepšia hodnota v stĺpci. Pri HD95 a FP objeme je lepšia nižšia hodnota. Accuracy sa líši až na 4.–5. desatinnom mieste.</p>
+    <p>Zvýraznená je najlepšia hodnota v stĺpci. Pri HD95 a FP objeme je lepšia nižšia hodnota; pri HD95 je v zátvorke počet chorých, z ktorých sa počíta. Accuracy sa líši až na 4.–5. desatinnom mieste.</p>
   </div>
   <div class="tbl-wrap"><table id="metric-table"></table></div>
   <p class="tbl-note">Zdroj: <code>docs/porovnanie-modelov/metriky.csv</code> (<code>compare_runs.py</code>). Kandidáti lézií pre nnU-Net sú z jeho vlastnej analýzy vo float32 (uložené mapy sú float16 a pri istotách blízko 1 by AUROC a AP vyšli nižšie). Pri YOLO je hodnota mapy skóre detekcie, nie pravdepodobnosť voxelu, takže jeho voxelové metriky pri prahu 0,5 silno závisia od prahu (pozri kompromis prahu v sekcii Detekcia).</p>
@@ -783,9 +783,9 @@ footer { padding-block: 32px 56px; margin-top: 48px; border-top: 1px solid var(-
     <h2>Priebežný log práce</h2>
     <p>Každá aktualizácia stránky pridá záznam a uloží kópiu do archívu, takže je vidieť, ako sa výsledky vyvíjali.</p>
   </div>
-  <ol class="timeline"><li><time>9. 11. 2026</time><div><b>Doladenie YOLO26n, prehľadnejšia tepelná mapa, výklad výsledkov ResUNetu</b><ul class="tight small" style="margin-top:4px"><li>Random Walker a Graph Cut aj pre YOLO26n (spolu 8 modelov): Random Walker nemení nič; Graph Cut +4 p. b. čistých negatívnych, ale −12,5 p. b. zachytených chorých a nižšie Dice+; skóre PI-CAI bez preukázateľnej zmeny.</li><li>Tepelná mapa metrík farbí podľa poradia modelov v stĺpci (7 odtieňov), najlepší je tučne.</li><li>Nový text: náš ResUNet v4_fast oproti ostatným modelom, s vysvetlením, čo jednotlivé metriky prakticky znamenajú.</li></ul></div></li><li><time>4. 11. 2026</time><div><b>YOLO26n, doladenie YOLO a nové porovnanie všetkých modelov</b><ul class="tight small" style="margin-top:4px"><li>Menší YOLO26n-seg (3,05 mil. parametrov) na porovnanie veľkosti: AUROC 0,827 ako YOLO26s, ale nižšie AP (0,480) a skóre PI-CAI (0,653). Spolu 9 modelov.</li><li>Random Walker a Graph Cut pre YOLO26s: Random Walker nemení nič, Graph Cut +7 p. b. čistých negatívnych za cenu −22 p. b. zachytených chorých; AUROC, AP ani skóre PI-CAI sa preukázateľne nemenia (spolu 7 dolaďovaných modelov).</li><li>Nová sekcia Porovnanie modelov: karta každého modelu s verdiktom z bootstrapu oproti hlavnému ResUNetu a tepelná mapa všetkých metrík s triedením.</li></ul></div></li><li><time>3. 11. 2026</time><div><b>2D model YOLO26s-seg</b><ul class="tight small" style="margin-top:4px"><li>YOLO26s-seg (Ultralytics, 11,4 mil. parametrov) natrénovaný na axiálnych rezoch s kanálmi T2W, ADC, HBV a vyhodnotený na 3D vyšetreniach tými istými metrikami a bootstrapom; pribudol ako 8. model do všetkých tabuliek, grafov a ukážok.</li><li>Detekcia: AUROC 0,828, AP 0,549, skóre PI-CAI 0,689; rozdiel od hlavného ResUNetu v4_fast je v rámci šumu.</li><li>Pri prahu 0,5 je veľmi opatrný: 88 % zdravých bez nálezu (najviac zo všetkých modelov), ale zachytí iba 50 % chorých a Dice+ je 0,28. Pri prahu 0,3 má Dice+ 0,43 a 71 % čistých negatívnych.</li><li>Nová záložka YOLO v sekcii Modely a graf jeho tréningu.</li></ul></div></li><li><time>27. 10. 2026</time><div><b>Dokončený nnU-Net na 1000 epoch</b><ul class="tight small" style="margin-top:4px"><li>nnU-Net s plným tréningom (1000 epoch, ~42 h) pribudol ako 7. model do všetkých tabuliek, grafov, bootstrapu a ukážok vyšetrení.</li><li>Oproti 100 epochám: globálny Dice 0,511 → 0,602 (najvyšší zo všetkých modelov), čisté negatívne 5 % → 23 %, AUROC 0,698 → 0,756, AP 0,321 → 0,390, skóre PI-CAI 0,510 → 0,573.</li><li>V detekcii pacientov (AUROC, AP, skóre PI-CAI, čisté negatívne) je stále preukázateľne za hlavným ResUNetom v4_fast; hlavný model sa nemení.</li><li>Random Walker a Graph Cut aj pre nnU-Net 1000 (spolu 6 modelov): AUROC, AP ani skóre PI-CAI sa nemenia, Graph Cut pridá iba +4 p. b. čistých negatívnych, lebo falošné nálezy nnU-Netu majú istotu tesne pri 1.</li></ul></div></li><li><time>21. 10. 2026</time><div><b>Grafové doladenie na 5 modeloch, priebeh nnU-Netu 1000 epoch</b><ul class="tight small" style="margin-top:4px"><li>Random Walker a Graph Cut doplnené pre ďalšie 3 modely (ResUNet v4, v5, SegResNet), spolu 5 modelov. Graph Cut pri každom zvýši podiel zdravých bez falošného nálezu o 8–17 p. b.; skóre PI-CAI, AUROC ani AP sa nemenia pri žiadnom modeli.</li><li>Nový prehľad doladenia všetkých modelov (graf a tabuľka s vyznačením preukázateľných zmien) a detail po modeloch.</li><li>Priebeh tréningu nnU-Netu na 1000 epoch (zatiaľ 462 epoch). Finálne metriky pribudnú až po dokončení všetkých 1000 epoch.</li></ul></div></li><li><time>19. 10. 2026</time><div><b>Prvá verejná verzia prehľadu</b><ul class="tight small" style="margin-top:4px"><li>Porovnanie 6 modelov na celom datasete (4 varianty vlastného ResUNetu, nnU-Net, SegResNet) a grafového doladenia (Random Walker, Graph Cut) na validácii.</li><li>Všetky metriky zo zadania aj z PI-CAI, párový bootstrap, krivky učenia a ukážky 9 validačných vyšetrení.</li><li>Porovnanie s publikovanými výsledkami výzvy PI-CAI.</li><li>Predchádzajúci vývoj (30. 9. – 16. 10. 2026) je v sekcii Vývoj behov.</li></ul></div></li></ol>
+  <ol class="timeline"><li><time>11. 11. 2026</time><div><b>HD95 s počtom vyšetrení</b><ul class="tight small" style="margin-top:4px"><li>Pri každej hodnote HD95 (tabuľka metrík, tepelná mapa, doladenie, súhrn hore) je v zátvorke počet chorých, z ktorých sa počíta, napr. 61/64. Vyšetrenie bez jediného označeného voxelu nemá okraj, a preto do HD95 nevstupuje.</li><li>Dôsledok: HD95 modelov s rôznym počtom vyšetrení nie je priamo porovnateľné. YOLO pri p ≥ 0,5 má HD95 iba z 33 (YOLO26s) a 34 (YOLO26n) zo 64 chorých, 3D siete zo 60–63.</li></ul></div></li><li><time>9. 11. 2026</time><div><b>Doladenie YOLO26n, prehľadnejšia tepelná mapa, výklad výsledkov ResUNetu</b><ul class="tight small" style="margin-top:4px"><li>Random Walker a Graph Cut aj pre YOLO26n (spolu 8 modelov): Random Walker nemení nič; Graph Cut +4 p. b. čistých negatívnych, ale −12,5 p. b. zachytených chorých a nižšie Dice+; skóre PI-CAI bez preukázateľnej zmeny.</li><li>Tepelná mapa metrík farbí podľa poradia modelov v stĺpci (7 odtieňov), najlepší je tučne.</li><li>Nový text: náš ResUNet v4_fast oproti ostatným modelom, s vysvetlením, čo jednotlivé metriky prakticky znamenajú.</li></ul></div></li><li><time>4. 11. 2026</time><div><b>YOLO26n, doladenie YOLO a nové porovnanie všetkých modelov</b><ul class="tight small" style="margin-top:4px"><li>Menší YOLO26n-seg (3,05 mil. parametrov) na porovnanie veľkosti: AUROC 0,827 ako YOLO26s, ale nižšie AP (0,480) a skóre PI-CAI (0,653). Spolu 9 modelov.</li><li>Random Walker a Graph Cut pre YOLO26s: Random Walker nemení nič, Graph Cut +7 p. b. čistých negatívnych za cenu −22 p. b. zachytených chorých; AUROC, AP ani skóre PI-CAI sa preukázateľne nemenia (spolu 7 dolaďovaných modelov).</li><li>Nová sekcia Porovnanie modelov: karta každého modelu s verdiktom z bootstrapu oproti hlavnému ResUNetu a tepelná mapa všetkých metrík s triedením.</li></ul></div></li><li><time>3. 11. 2026</time><div><b>2D model YOLO26s-seg</b><ul class="tight small" style="margin-top:4px"><li>YOLO26s-seg (Ultralytics, 11,4 mil. parametrov) natrénovaný na axiálnych rezoch s kanálmi T2W, ADC, HBV a vyhodnotený na 3D vyšetreniach tými istými metrikami a bootstrapom; pribudol ako 8. model do všetkých tabuliek, grafov a ukážok.</li><li>Detekcia: AUROC 0,828, AP 0,549, skóre PI-CAI 0,689; rozdiel od hlavného ResUNetu v4_fast je v rámci šumu.</li><li>Pri prahu 0,5 je veľmi opatrný: 88 % zdravých bez nálezu (najviac zo všetkých modelov), ale zachytí iba 50 % chorých a Dice+ je 0,28. Pri prahu 0,3 má Dice+ 0,43 a 71 % čistých negatívnych.</li><li>Nová záložka YOLO v sekcii Modely a graf jeho tréningu.</li></ul></div></li><li><time>27. 10. 2026</time><div><b>Dokončený nnU-Net na 1000 epoch</b><ul class="tight small" style="margin-top:4px"><li>nnU-Net s plným tréningom (1000 epoch, ~42 h) pribudol ako 7. model do všetkých tabuliek, grafov, bootstrapu a ukážok vyšetrení.</li><li>Oproti 100 epochám: globálny Dice 0,511 → 0,602 (najvyšší zo všetkých modelov), čisté negatívne 5 % → 23 %, AUROC 0,698 → 0,756, AP 0,321 → 0,390, skóre PI-CAI 0,510 → 0,573.</li><li>V detekcii pacientov (AUROC, AP, skóre PI-CAI, čisté negatívne) je stále preukázateľne za hlavným ResUNetom v4_fast; hlavný model sa nemení.</li><li>Random Walker a Graph Cut aj pre nnU-Net 1000 (spolu 6 modelov): AUROC, AP ani skóre PI-CAI sa nemenia, Graph Cut pridá iba +4 p. b. čistých negatívnych, lebo falošné nálezy nnU-Netu majú istotu tesne pri 1.</li></ul></div></li><li><time>21. 10. 2026</time><div><b>Grafové doladenie na 5 modeloch, priebeh nnU-Netu 1000 epoch</b><ul class="tight small" style="margin-top:4px"><li>Random Walker a Graph Cut doplnené pre ďalšie 3 modely (ResUNet v4, v5, SegResNet), spolu 5 modelov. Graph Cut pri každom zvýši podiel zdravých bez falošného nálezu o 8–17 p. b.; skóre PI-CAI, AUROC ani AP sa nemenia pri žiadnom modeli.</li><li>Nový prehľad doladenia všetkých modelov (graf a tabuľka s vyznačením preukázateľných zmien) a detail po modeloch.</li><li>Priebeh tréningu nnU-Netu na 1000 epoch (zatiaľ 462 epoch). Finálne metriky pribudnú až po dokončení všetkých 1000 epoch.</li></ul></div></li><li><time>19. 10. 2026</time><div><b>Prvá verejná verzia prehľadu</b><ul class="tight small" style="margin-top:4px"><li>Porovnanie 6 modelov na celom datasete (4 varianty vlastného ResUNetu, nnU-Net, SegResNet) a grafového doladenia (Random Walker, Graph Cut) na validácii.</li><li>Všetky metriky zo zadania aj z PI-CAI, párový bootstrap, krivky učenia a ukážky 9 validačných vyšetrení.</li><li>Porovnanie s publikovanými výsledkami výzvy PI-CAI.</li><li>Predchádzajúci vývoj (30. 9. – 16. 10. 2026) je v sekcii Vývoj behov.</li></ul></div></li></ol>
   <h3 style="margin-top:22px; margin-bottom:10px">Archív verzií</h3>
-  <div class="archive-list"><a href="archiv/2026-11-09/">9. 11. 2026</a><a href="archiv/2026-11-04/">4. 11. 2026</a><a href="archiv/2026-11-03/">3. 11. 2026</a><a href="archiv/2026-10-27/">27. 10. 2026</a><a href="archiv/2026-10-21/">21. 10. 2026</a><a href="archiv/2026-10-19/">19. 10. 2026</a></div>
+  <div class="archive-list"><a href="archiv/2026-11-11/">11. 11. 2026</a><a href="archiv/2026-11-09/">9. 11. 2026</a><a href="archiv/2026-11-04/">4. 11. 2026</a><a href="archiv/2026-11-03/">3. 11. 2026</a><a href="archiv/2026-10-27/">27. 10. 2026</a><a href="archiv/2026-10-21/">21. 10. 2026</a><a href="archiv/2026-10-19/">19. 10. 2026</a></div>
 </section>
 </main>
 
@@ -797,7 +797,7 @@ footer { padding-block: 32px 56px; margin-top: 48px; border-top: 1px solid var(-
       <div class="links" style="margin-top:6px"><a href="https://github.com/JurajHusek" target="_blank" rel="noopener">GitHub · JurajHusek</a><a href="https://www.linkedin.com/in/juraj-hu%C5%A1ek-3a7442312" target="_blank" rel="noopener">LinkedIn · Juraj Hušek</a></div>
     </div>
     <div class="small">
-      Študentská práca na vzdelávacie a výskumné účely, nie klinický nástroj. Priebežné výsledky z validácie k 9. 11. 2026; stránka je automaticky vygenerovaná z doterajších nameraných výsledkov práce (9. 11. 2026).
+      Študentská práca na vzdelávacie a výskumné účely, nie klinický nástroj. Priebežné výsledky z validácie k 9. 11. 2026; stránka je automaticky vygenerovaná z doterajších nameraných výsledkov práce (11. 11. 2026).
       Dáta: PI-CAI public (Saha et al., 2024; anotácie Pooch et al., 2025), licencia <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>. Obrázky MRI na stránke sú upravené výrezy z tohto datasetu (prevzorkovanie, výrez okolo prostaty, normalizácia intenzít, prekrytie odbornou maskou a mapou pravdepodobnosti modelu).
     </div>
   </div>
@@ -813,6 +813,9 @@ const NS = "http://www.w3.org/2000/svg";
 const sv = (tag, attrs = {}, text) => { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (text !== undefined) e.textContent = text; return e; };
 const fmt = (v, d = 3) => v === null || v === undefined || Number.isNaN(v) ? "–" : Number(v).toFixed(d).replace(".", ",").replace("-", "−");
 const pct = v => v === null || v === undefined ? "–" : Math.round(v * 100) + " %";
+// HD95 sa dá spočítať iba pri neprázdnej predikcii: vždy ukázať, z koľkých pozitívnych vyšetrení je.
+const hdn = r => r && r.hd95_cases !== null && r.hd95_cases !== undefined
+  ? ` <small style="opacity:.75; white-space:nowrap">(${r.hd95_cases}/${r.positive_cases})</small>` : "";
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 // ---------- modely a farby (farba patrí modelu, nie poradiu) ----------
@@ -827,7 +830,7 @@ const swatch = k => `<span class="swatch" style="background:${col(k)}"></span>`;
 // ---------- KPI ----------
 const main = M.v4_fast;
 const kpis = [[fmt(main.ranking_score), "skóre PI-CAI (AUROC + AP) / 2"], [fmt(main.patient_auroc), "AUROC pacientov"], [fmt(main.lesion_ap), "AP lézií"],
-  [fmt(main.positive_dice), "Dice+ (pozitívne vyšetrenia)"], [fmt(main.hd95_mm_median, 2) + " mm", "HD95 medián"],
+  [fmt(main.positive_dice), "Dice+ (pozitívne vyšetrenia)"], [fmt(main.hd95_mm_median, 2) + " mm", `HD95 medián (${main.hd95_cases} z ${main.positive_cases} chorých)`],
   [pct(main.negative_clean), "zdravých bez falošného nálezu"]];
 $("#kpis").innerHTML = kpis.map(([v, l]) => `<div class="kpi"><span class="v">${v}</span><span class="l">${l}</span></div>`).join("");
 
@@ -843,7 +846,7 @@ const METRICS = [
   { k: "positive_detected", n: "zachyt. poz.", g: "Doplnkové", p: true }, { k: "negative_clean", n: "čisté neg.", g: "Doplnkové", p: true },
   { k: "negative_fp_mm3", n: "FP mm³/neg.", g: "Doplnkové", d: 0, low: true },
 ];
-const mval = (m, r) => m.p ? pct(r[m.k]) : fmt(r[m.k], m.d ?? 3);
+const mval = (m, r) => (m.p ? pct(r[m.k]) : fmt(r[m.k], m.d ?? 3)) + (m.k.startsWith("hd95") ? hdn(r) : "");
 (function metricTable() {
   const groups = []; METRICS.forEach(m => { const g = groups[groups.length - 1]; if (g && g.g === m.g) g.n++; else groups.push({ g: m.g, n: 1 }); });
   let h = `<thead><tr class="grp"><th></th>${groups.map(g => `<th colspan="${g.n}">${g.g}</th>`).join("")}</tr><tr><th>Model</th>${METRICS.map(m => `<th>${m.n}</th>`).join("")}</tr></thead><tbody>`;
@@ -1088,7 +1091,7 @@ function drawRefAll() {
     h += `<tr class="${m === "none" ? "main" : ""}"><td>${m === "none" ? swatch(k) + LABEL[k] : `<span style="padding-left:17px">${METHOD_NAME[m]}</span>`}</td>`;
     REF_COLS.forEach(([c, , d, low]) => {
       const b = m === "none" ? null : bootRow(k, m, c), better = b && (low ? b.difference < 0 : b.difference > 0);
-      h += `<td class="${isSig(b) ? "sig " + (better ? "pos" : "neg") : ""}">${d === "p" ? pct(r[c]) : fmt(r[c], d ?? 3)}</td>`;
+      h += `<td class="${isSig(b) ? "sig " + (better ? "pos" : "neg") : ""}">${d === "p" ? pct(r[c]) : fmt(r[c], d ?? 3)}${c.startsWith("hd95") ? hdn(r) : ""}</td>`;
     });
     h += "</tr>";
   }));
@@ -1133,7 +1136,7 @@ function drawRefine() {
     ["global_accuracy", "accuracy", 4], ["hd95_mm_median", "HD95 med.", 2], ["negative_clean", "čisté neg.", "p"], ["negative_fp_mm3", "FP mm³/neg.", 0], ["patient_auroc", "AUROC"], ["lesion_ap", "AP"], ["ranking_score", "PI-CAI"]];
   const name = r => r.name === "none" ? "bez doladenia" : METHOD_NAME[r.name] + (r.evaluation.startsWith("5") ? " · krížová validácia" : ` · parametre z celej val (${r.combo})`);
   let h = `<thead><tr><th>Mapa</th>${cols.map(c => `<th>${c[1]}</th>`).join("")}</tr></thead><tbody>`;
-  R.comparison.forEach(r => { h += `<tr class="${r.evaluation.startsWith("5") ? "main" : ""}"><td>${name(r)}</td>${cols.map(c => `<td>${c[2] === "p" ? pct(r[c[0]]) : fmt(r[c[0]], c[2] ?? 3)}</td>`).join("")}</tr>`; });
+  R.comparison.forEach(r => { h += `<tr class="${r.evaluation.startsWith("5") ? "main" : ""}"><td>${name(r)}</td>${cols.map(c => `<td>${c[2] === "p" ? pct(r[c[0]]) : fmt(r[c[0]], c[2] ?? 3)}${c[0].startsWith("hd95") ? hdn(r) : ""}</td>`).join("")}</tr>`; });
   $("#ref-table").innerHTML = h + "</tbody>";
   const ks = [["global_dice", "glob. Dice"], ["positive_dice", "Dice+"], ["positive_precision", "precision+"], ["positive_recall", "citlivosť+"], ["hd95_mm_median", "HD95 med. (mm)", 2, true], ["negative_clean", "čisté neg.", "p"], ["negative_fp_mm3", "FP mm³/neg.", 0, true], ["patient_auroc", "AUROC"], ["lesion_ap", "AP"], ["ranking_score", "skóre PI-CAI"]];
   let b = `<thead><tr><th>Metrika</th><th>RW − bez</th><th>GC − bez</th></tr></thead><tbody>`;
